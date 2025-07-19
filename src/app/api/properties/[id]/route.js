@@ -79,8 +79,8 @@ export async function PUT(req, { params }) {
   return new Response(JSON.stringify(updated), { status: 200 });
 }
 
-export async function DELETE(req, { params }) {
-  const { id } = params;
+export async function DELETE(req, context) {
+  const { id } = context.params; // ✅ proper access without 'await'
   await connectToDB();
   await Property.findByIdAndDelete(id);
   return new Response(null, { status: 204 });

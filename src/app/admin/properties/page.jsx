@@ -13,6 +13,20 @@ export default function AdminProperties() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [removedImages, setRemovedImages] = useState([]);
 
+  const fetchProperties = async () => {
+    try {
+      const { data } = await axios.get('/api/properties');
+      setProperties(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+  
+
   // redirect non-admins
   useEffect(() => {
     if (status === 'unauthenticated') {
