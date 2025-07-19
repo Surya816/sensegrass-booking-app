@@ -26,58 +26,111 @@ export default function LoginPage() {
 
   return (
     <div style={{
-      maxWidth: '400px',
-      margin: '60px auto',
-      padding: '30px',
-      border: '1px solid #ccc',
-      borderRadius: '8px',
-      backgroundColor: '#fafafa',
-      fontFamily: `'Segoe UI', sans-serif`
+      minHeight: '100vh',
+      background: '#f5f5f5',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: `'Segoe UI', sans-serif`,
+      padding: '20px'
     }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Login to Your Account</h2>
-      
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          style={{ width: '100%', padding: '10px', marginBottom: '12px' }}
-        />
+      <div style={{
+        maxWidth: '420px',
+        width: '100%',
+        padding: '32px',
+        background: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+      }}>
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
-        />
+<div style={{
+    fontSize: '28px',
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    textAlign: 'center',
+    marginBottom: '8px',
+    letterSpacing: '-0.5px'
+  }}>
+    🌿 Sensegrass
+  </div>
+        <h2 style={{
+          textAlign: 'center',
+          marginBottom: '24px',
+          fontSize: '24px',
+          color: '#2e7d32'
+        }}>
+          Login to Your Account
+        </h2>
 
-        <button
-          type="submit"
-          style={{
-            width: '100%',
-            padding: '12px',
-            backgroundColor: '#2e7d32',
-            color: '#fff',
-            fontWeight: 'bold',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Login
-        </button>
-      </form>
+        <form onSubmit={handleLogin}>
+          <label style={{ fontSize: '14px', marginBottom: '6px', display: 'block', color: '#333' }}>Email</label>
+          <input
+  type="email"
+  placeholder="you@example.com"
+  required
+  value={form.email}
+  onChange={(e) => setForm({ ...form, email: e.target.value })}
+  style={{
+    width: '100%',
+    padding: '12px',
+    marginBottom: '16px',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    fontSize: '15px',
+    outline: 'none',
+    background: '#fff',
+    color: '#222',           // ✅ Add this line
+  }}
+/>
 
-      <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px' }}>
-        Don't have an account?{' '}
-        <Link href="/register" style={{ color: '#2e7d32', fontWeight: 'bold' }}>
-          Register here
-        </Link>
-      </p>
+<input
+  type="password"
+  placeholder="••••••••"
+  required
+  value={form.password}
+  onChange={(e) => setForm({ ...form, password: e.target.value })}
+  style={{
+    width: '100%',
+    padding: '12px',
+    marginBottom: '20px',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    fontSize: '15px',
+    outline: 'none',
+    background: '#fff',
+    color: '#222',           // ✅ Add this line
+  }}
+/>
+
+
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '14px',
+              backgroundColor: '#2e7d32',
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: '16px',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              transition: 'background 0.3s'
+            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#27682c'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = '#2e7d32'}
+          >
+            Login
+          </button>
+        </form>
+
+        <p style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#444' }}>
+          Don't have an account?{' '}
+          <Link href="/register" style={{ color: '#2e7d32', fontWeight: 'bold', textDecoration: 'none' }}>
+            Register here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

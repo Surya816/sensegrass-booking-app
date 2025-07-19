@@ -75,6 +75,8 @@ export default function AdminBookings() {
           <Link href="/" style={linkStyles}>Home</Link>
           <Link href="/properties" style={linkStyles}>Properties</Link>
           <Link href="/dashboard" style={linkStyles}>Dashboard</Link>
+          <Link href="/profile" style={linkStyles}>Profile</Link>
+
           {session
             ? <button onClick={() => signOut({ callbackUrl: '/' })} style={btnStyles}>
                 Logout

@@ -1,10 +1,24 @@
 'use client';
 
 import { useSession,signOut } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function HomePage() {
   const { data: session } = useSession();
+  const [bubbles, setBubbles] = useState([]);
+  useEffect(() => {
+    const generated = Array.from({ length: 5 }, (_, i) => ({
+      id: i,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      width: `${40 + Math.random() * 80}px`,
+      height: `${40 + Math.random() * 80}px`,
+      opacity: 0.3 + Math.random() * 0.2,
+      animation: `${i % 2 === 0 ? 'floatLeft' : 'floatRight'} ${30 + i * 5}s linear infinite`,
+    }));
+    setBubbles(generated);
+  }, []);
 
     const styles = {
 
@@ -145,13 +159,44 @@ export default function HomePage() {
 
   return (
     <div style={styles.container}>
+      {/* ✅ Correct CSS inside JSX */}
+      <style jsx>{`
+        @keyframes rotate {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+  
+        .animated-bg {
+          animation: rotate 120s linear infinite;
+          transform-origin: center;
+        }
+      `}</style>
+      <style jsx>{`
+        @keyframes floatLeft {
+          0% { transform: translateX(0) translateY(0); }
+          50% { transform: translateX(-60vw) translateY(10vh); }
+          100% { transform: translateX(0) translateY(0); }
+        }
+
+        @keyframes floatRight {
+          0% { transform: translateX(0) translateY(0); }
+          50% { transform: translateX(60vw) translateY(-10vh); }
+          100% { transform: translateX(0) translateY(0); }
+        }
+
+        .animated-bg {
+          display: none; /* Hide old rotating one */
+        }
+      `}</style>
+
+  
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.logo}>Sensegrass</div>
         <nav style={styles.nav}>
           <Link href="/" style={styles.navLink}>Home</Link>
           <Link href="/properties" style={styles.navLink}>Properties</Link>
-
+  
           {session ? (
             <>
               <Link href="/dashboard" style={styles.navLink}>Dashboard</Link>
@@ -177,115 +222,329 @@ export default function HomePage() {
           )}
         </nav>
       </header>
+  
+      {/* Hero Section */}
+      <section style={{
+        position: 'relative',
+        overflow: 'hidden',
+        padding: '100px 20px',
+        textAlign: 'center',
+        background: '#f1fff5',
+      }}>
+        {/* Rotating Background */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+  {bubbles.map(({ id, top, left, width, height, opacity, animation }) => (
+    <svg
+      key={id}
+      viewBox="0 0 200 200"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{
+        position: 'absolute',
+        top, left, width, height, opacity,
+        zIndex: 0,
+        animation,
+      }}
+    >
+      <path
+        fill="#388E3C"
+        d="M44.8,-76.9C57.6,-70.1,67.4,-57.5,75.8,-43.8C84.3,-30.1,91.3,-15.1,91.2,0.1C91.2,15.4,84.2,30.7,75.6,43.6C67.1,56.6,57,67.3,43.7,74.1C30.3,80.9,13.7,83.7,-1.4,86C-16.6,88.3,-33.1,90,-47.1,83.3C-61.2,76.6,-72.7,61.5,-78.2,45.3C-83.6,29,-82.9,11.6,-77.7,-3.7C-72.6,-19.1,-63,-32.3,-52.1,-45.1C-41.1,-57.9,-29,-70.3,-14.5,-77.8C0,-85.3,17.6,-87.8,44.8,-76.9Z"
+        transform="translate(100 100)"
+      />
+    </svg>
+  ))}
+</div>
 
-
-      {/* Hero */}
-      <section style={styles.hero}>
-        <div style={styles.heroBadge}>Sustainable Travel Platform</div>
-        <h1 style={styles.heroTitle}>
-          Book{' '}
-          <span style={styles.heroHighlight}>Eco-Friendly</span>{' '}
-          Stays<br />
-          with Ease
-        </h1>
-        <p style={styles.heroText}>
-          Explore and reserve sustainable properties powered by Sensegrass.
-          Your gateway to responsible travel and unforgettable experiences.
-        </p>
-        <button style={styles.heroButton}>Browse Properties →</button>
+  
+        {/* Foreground Content */}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{
+            display: 'inline-block',
+            padding: '6px 16px',
+            background: '#C8E6C9',
+            color: '#256029',
+            fontSize: '13px',
+            fontWeight: 600,
+            borderRadius: '16px',
+            marginBottom: '16px'
+          }}>
+            Sustainable Travel Platform
+          </div>
+  
+          <h1 style={{
+            fontSize: '48px',
+            fontWeight: 700,
+            lineHeight: 1.2,
+            color: '#1B5E20',
+            maxWidth: '700px',
+            margin: '0 auto 16px'
+          }}>
+            Book <span style={{ color: '#43A047' }}>Eco-Friendly</span> Stays<br /> Around the World
+          </h1>
+  
+          <p style={{
+            fontSize: '18px',
+            color: '#555',
+            maxWidth: '600px',
+            margin: '0 auto 32px'
+          }}>
+            Discover verified green properties and reserve your next stay with just a few clicks. Travel responsibly, live beautifully.
+          </p>
+  
+          <Link href="/properties">
+            <button style={{
+              padding: '14px 32px',
+              background: '#2e7d32',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '17px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(46,125,50,0.3)',
+              transition: 'transform 0.2s ease'
+            }}
+              onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'}
+              onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              🌍 Browse Properties
+            </button>
+          </Link>
+        </div>
       </section>
+  
+
 
       {/* Why Choose */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Why Choose Sensegrass?</h2>
-        <p style={styles.sectionText}>
-          Experience the future of sustainable travel with our cutting-edge platform
-        </p>
-        <div style={{ ...styles.grid3, gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
-          {[
-            ['Easy Booking System', 'Intuitive search and booking process'],
-            ['Secure Payments', 'Protected by Razorpay encryption'],
-            ['Real-Time Availability', 'Live updates on property status'],
-            ['Admin & User Dashboards', 'Comprehensive management tools'],
-            ['Live Map Selection', 'Interactive property discovery'],
-            ['Mobile-Friendly UI', 'Optimized for all devices'],
-          ].map(([title, desc]) => (
-            <div key={title} style={styles.card}>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
-                {title}
-              </h3>
-              <p style={{ color: '#555', fontSize: '14px' }}>{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section style={{
+  padding: '80px 20px',
+  maxWidth: '1100px',
+  margin: '0 auto',
+  textAlign: 'center'
+}}>
+  <h2 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 700 }}>
+    Why Choose <span style={{ color: '#2e7d32' }}>Sensegrass</span>?
+  </h2>
+  <p style={{ color: '#666', marginBottom: '48px', fontSize: '16px' }}>
+    Experience the future of sustainable travel with our cutting-edge platform
+  </p>
+
+  <div style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+    gap: '24px',
+    textAlign: 'left',
+  }}>
+    {[
+      ['🚀', 'Easy Booking System', 'Intuitive search and booking process'],
+      ['💳', 'Secure Payments', 'Protected by Razorpay encryption'],
+      ['📡', 'Real-Time Availability', 'Live updates on property status'],
+      ['📊', 'Admin & User Dashboards', 'Comprehensive management tools'],
+      ['🗺️', 'Live Map Selection', 'Interactive property discovery'],
+      ['📱', 'Mobile-Friendly UI', 'Optimized for all devices'],
+    ].map(([icon, title, desc]) => (
+      <div key={title} style={{
+        background: '#fff',
+        padding: '24px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        cursor: 'default',
+      }}
+        onMouseOver={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)';
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+        }}
+      >
+        <div style={{ fontSize: '28px', marginBottom: '12px' }}>{icon}</div>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '6px', color: '#222' }}>{title}</h3>
+        <p style={{ color: '#555', fontSize: '14px', lineHeight: 1.5 }}>{desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* How It Works */}
-      <section style={{ ...styles.section, background: '#f7f7f7' }}>
-        <h2 style={styles.sectionTitle}>How It Works</h2>
-        <p style={styles.sectionText}>Three simple steps to your perfect eco-friendly getaway</p>
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '32px' }}>
-          {[
-            ['01', 'Create Account', 'Sign up in seconds with our streamlined process'],
-            ['02', 'Browse Properties', 'Explore eco-friendly stays on our interactive map'],
-            ['03', 'Book Instantly', 'Select dates and confirm your sustainable getaway'],
-          ].map(([step, title, desc]) => (
-            <div key={step} style={{ textAlign: 'center', maxWidth: '200px' }}>
-              <div style={styles.stepCircle}>{step}</div>
-              <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '4px' }}>
-                {title}
-              </h4>
-              <p style={{ color: '#555', fontSize: '13px' }}>{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section style={{
+  padding: '80px 20px',
+  background: '#f7f7f7',
+  textAlign: 'center'
+}}>
+  <h2 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '16px' }}>
+    How It Works
+  </h2>
+  <p style={{ color: '#666', marginBottom: '48px', fontSize: '16px' }}>
+    Three simple steps to your perfect eco-friendly getaway
+  </p>
+
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '40px',
+  }}>
+    {[
+      ['📝', 'Create Account', 'Sign up in seconds with our streamlined process'],
+      ['🧭', 'Browse Properties', 'Explore eco-friendly stays on our interactive map'],
+      ['⚡', 'Book Instantly', 'Select dates and confirm your sustainable getaway'],
+    ].map(([icon, title, desc], i) => (
+      <div key={i} style={{
+        background: '#fff',
+        padding: '24px',
+        borderRadius: '12px',
+        maxWidth: '220px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+        transition: 'transform 0.2s ease',
+      }}
+        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+      >
+        <div style={{
+          fontSize: '32px',
+          marginBottom: '12px',
+          color: '#2e7d32'
+        }}>{icon}</div>
+        <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>{title}</h4>
+        <p style={{ color: '#555', fontSize: '14px', lineHeight: 1.5 }}>{desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Built for Everyone */}
-      <section style={{ ...styles.section, background: '#fff8e1' }}>
-        <h2 style={styles.sectionTitle}>Built for Everyone</h2>
-        <p style={styles.sectionText}>
-          Whether you're a traveler or property owner, we've got you covered
-        </p>
-        <div style={{ ...styles.twoCols, gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-          <div style={styles.roleCard}>
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#2e7d32', marginBottom: '8px' }}>
-              For Travelers
-            </h3>
-            <ul style={{ color: '#555', fontSize: '14px', paddingLeft: '20px' }}>
-              <li>Book sustainable properties with ease</li>
-              <li>View and manage your bookings</li>
-              <li>Discover eco-friendly destinations</li>
-            </ul>
-          </div>
-          <div style={styles.roleCard}>
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#2e7d32', marginBottom: '8px' }}>
-              For Property Owners
-            </h3>
-            <ul style={{ color: '#555', fontSize: '14px', paddingLeft: '20px' }}>
-              <li>Add and manage property listings</li>
-              <li>Track bookings and revenue</li>
-              <li>Comprehensive admin dashboard</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <section style={{
+  padding: '80px 20px',
+  background: '#fffde7',
+  textAlign: 'center'
+}}>
+  <h2 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '16px' }}>
+    Built for Everyone
+  </h2>
+  <p style={{ color: '#666', marginBottom: '40px', fontSize: '16px' }}>
+    Whether you're a traveler or property owner, we've got you covered
+  </p>
+
+  <div style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '32px',
+    maxWidth: '900px',
+    margin: '0 auto'
+  }}>
+    {[
+      ['🌿 For Travelers', [
+        'Book sustainable properties with ease',
+        'View and manage your bookings',
+        'Discover eco-friendly destinations'
+      ]],
+      ['🏡 For Property Owners', [
+        'Add and manage property listings',
+        'Track bookings and revenue',
+        'Comprehensive admin dashboard'
+      ]]
+    ].map(([heading, items], i) => (
+      <div key={i} style={{
+        background: '#fffde1',
+        padding: '24px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+        textAlign: 'left',
+      }}>
+        <h3 style={{
+          fontSize: '18px',
+          fontWeight: 600,
+          color: '#2e7d32',
+          marginBottom: '12px'
+        }}>{heading}</h3>
+        <ul style={{ color: '#555', fontSize: '14px', paddingLeft: '20px', lineHeight: 1.6 }}>
+          {items.map((item, j) => (
+            <li key={j}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Call to Action */}
-      <section style={styles.cta}>
-        <h2 style={styles.ctaTitle}>Ready to Start Your Sustainable Journey?</h2>
-        <p style={styles.ctaText}>
-          Join thousands of eco-conscious travelers and property owners making a difference
-        </p>
-        <div>
-          <button style={{ ...styles.ctaButton, ...styles.ctaPrimary }}>
-            Explore Properties
-          </button>
-          <button style={{ ...styles.ctaButton, ...styles.ctaSecondary }}>
-            Become a Host
-          </button>
-        </div>
-      </section>
+      <section style={{
+  padding: '80px 20px',
+  textAlign: 'center',
+  background: '#2e7d32',
+  color: '#fff',
+}}>
+  <h2 style={{
+    fontSize: '32px',
+    marginBottom: '16px',
+    fontWeight: 700,
+  }}>
+    Ready to Start Your Sustainable Journey?
+  </h2>
+  <p style={{
+    marginBottom: '32px',
+    fontSize: '16px',
+    maxWidth: '600px',
+    marginInline: 'auto',
+    lineHeight: 1.5,
+  }}>
+    Join thousands of eco-conscious travelers and property owners making a difference.
+  </p>
+  <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+    <button style={{
+      padding: '12px 24px',
+      borderRadius: '6px',
+      fontSize: '16px',
+      fontWeight: 500,
+      background: '#fff',
+      color: '#2e7d32',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+    }}
+      onMouseOver={e => e.currentTarget.style.opacity = '0.9'}
+      onMouseOut={e => e.currentTarget.style.opacity = '1'}
+    >
+      🌍 Explore Properties
+    </button>
+    <button style={{
+      padding: '12px 24px',
+      borderRadius: '6px',
+      fontSize: '16px',
+      fontWeight: 500,
+      background: 'transparent',
+      color: '#fff',
+      border: '1px solid #fff',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+    }}
+      onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+      onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+    >
+      🏡 Become a Host
+    </button>
+  </div>
+</section>
+<footer style={{
+  background: '#1b5e20',
+  color: '#fff',
+  padding: '40px 20px',
+  fontSize: '14px',
+  textAlign: 'center'
+}}>
+  <p style={{ marginBottom: '8px' }}>
+    &copy; {new Date().getFullYear()} Sensegrass. All rights reserved.
+  </p>
+  <p>
+    Built with 💚 for eco-conscious travel.
+  </p>
+</footer>
+
     </div>
   );
 }

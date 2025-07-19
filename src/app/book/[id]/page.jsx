@@ -155,43 +155,103 @@ export default function BookingPage() {
         </nav>
       </header>
 
-      <div style={container}>
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-        <h2 style={{ margin: 0 }}>{prop.title}</h2>
-        <p style={{ color: '#555', marginTop: '0.5rem' }}>Price per day: ₹{prop.price}</p>
+      <div style={{
+  maxWidth: '600px',
+  margin: '40px auto',
+  background: '#fff',
+  borderRadius: '12px',
+  padding: '32px',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+  fontFamily: `'Segoe UI', sans-serif`,
+  color: '#222'
+}}>
+  <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-        <form onSubmit={handleBook} style={formStyles}>
-          <label style={labelStyles}>
-            From:
-            <input
-              type="date"
-              required
-              value={fromDate}
-              onChange={e => setFrom(e.target.value)}
-              style={inputStyles}
-            />
-          </label>
+  {/* Property Title & Price */}
+  <div style={{ marginBottom: '24px' }}>
+    <h2 style={{
+      fontSize: '24px',
+      fontWeight: '600',
+      marginBottom: '8px',
+      color: '#2e7d32'
+    }}>
+      {prop.title}
+    </h2>
+    <p style={{ color: '#555', fontSize: '15px' }}>
+      Price per day: ₹{prop.price}
+    </p>
+  </div>
 
-          <label style={labelStyles}>
-            To:
-            <input
-              type="date"
-              required
-              value={toDate}
-              onChange={e => setTo(e.target.value)}
-              style={inputStyles}
-            />
-          </label>
+  {/* Booking Form */}
+  <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <label style={{ fontSize: '14px', fontWeight: '500' }}>
+      From:
+      <input
+        type="date"
+        required
+        value={fromDate}
+        onChange={e => setFrom(e.target.value)}
+        style={{
+          marginTop: '6px',
+          padding: '12px',
+          borderRadius: '6px',
+          border: '1px solid #ccc',
+          fontSize: '15px',
+          width: '100%',
+          backgroundColor: '#fff',  // ✅ Fix for black bg
+          color: '#222',            // ✅ Fix for invisible text
+        }}
+      />
+    </label>
 
-          <p style={{ fontSize: '16px', fontWeight: '500' }}>
-            Total Amount: ₹{amount}
-          </p>
+    <label style={{ fontSize: '14px', fontWeight: '500' }}>
+      To:
+      <input
+        type="date"
+        required
+        value={toDate}
+        onChange={e => setTo(e.target.value)}
+        style={{
+          marginTop: '6px',
+          padding: '12px',
+          borderRadius: '6px',
+          border: '1px solid #ccc',
+          fontSize: '15px',
+          width: '100%',
+          backgroundColor: '#fff',  // ✅ Fix for black bg
+          color: '#222',            // ✅ Fix for invisible text
+        }}
+      />
+    </label>
 
-          <button type="submit" style={submitStyles}>
-            Pay &amp; Book
-          </button>
-        </form>
-      </div>
+    <div style={{
+      fontSize: '16px',
+      fontWeight: 500,
+      marginTop: '4px',
+      color: '#444'
+    }}>
+      Total Amount: ₹{amount}
+    </div>
+
+    <button type="submit" style={{
+      padding: '14px',
+      background: '#2e7d32',
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: '16px',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease'
+    }}
+      onMouseOver={e => e.currentTarget.style.background = '#27682c'}
+      onMouseOut={e => e.currentTarget.style.background = '#2e7d32'}
+    >
+      Pay &amp; Book
+    </button>
+  </form>
+</div>
+
     </>
   );
 }
