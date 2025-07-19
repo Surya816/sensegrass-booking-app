@@ -219,7 +219,3 @@ db.users.insertOne({
 PRs and issues welcome! Please follow code style and update tests.
 
 ---
-
-## License
-
-Licensed under the MIT License.
